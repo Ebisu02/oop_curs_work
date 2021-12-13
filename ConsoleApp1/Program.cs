@@ -94,7 +94,7 @@ namespace SnakeGame
 
     interface IWalls
     {
-        public bool IsHit(Point p);
+        virtual public bool IsHit(Point p) { return true; }
     };
 
 
@@ -133,7 +133,7 @@ namespace SnakeGame
             }
         }
 
-        public bool IsHit(Point p)
+        virtual public bool IsHit(Point p)
         {
             foreach (var w in wall)
             {
@@ -173,7 +173,7 @@ namespace SnakeGame
         private int step = 1;
         private Point tail;
         private Point head;
-
+        private Direction direction_control;
         bool rotate = true;
 
         public Snake(int x, int y, int length)
@@ -244,22 +244,33 @@ namespace SnakeGame
         {
             if (rotate)
             {
-                switch (direction)
+                switch (direction_control)
                 {
                     case Direction.LEFT:
                     case Direction.RIGHT:
                         if (key == ConsoleKey.DownArrow)
-                            direction = Direction.DOWN;
+                            direction_control = Direction.DOWN;
                         else if (key == ConsoleKey.UpArrow)
-                            direction = Direction.UP;
+                            direction_control = Direction.UP;
                         break;
                     case Direction.UP:
                     case Direction.DOWN:
                         if (key == ConsoleKey.LeftArrow)
-                            direction = Direction.LEFT;
+                            direction_control = Direction.LEFT;
                         else if (key == ConsoleKey.RightArrow)
-                            direction = Direction.RIGHT;
+                            direction_control = Direction.RIGHT;
                         break;
+                }
+                if ((direction == Direction.RIGHT && direction_control == Direction.LEFT) ||
+                    (direction == Direction.LEFT && direction_control == Direction.RIGHT) ||
+                    (direction == Direction.UP && direction_control == Direction.DOWN) ||
+                    (direction == Direction.DOWN && direction_control == Direction.UP))
+                {
+
+                }
+                else
+                {
+                    direction = direction_control;
                 }
                 rotate = false;
             }
@@ -293,6 +304,13 @@ namespace SnakeGame
         public Point food { get; private set; }
 
         Random random = new Random();
+
+        public FoodFactory()
+        {
+            this.x = 0;
+            this.y = 0;
+            this.ch = '\0';
+        }
 
         public FoodFactory(int x, int y, char ch)
         {
