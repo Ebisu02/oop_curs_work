@@ -165,7 +165,7 @@ namespace SnakeGame
     }
 
 
-    class Snake
+    class Snake: ISnake
     {
         private List<Point> snake;
 
