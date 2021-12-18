@@ -7,8 +7,8 @@ namespace SnakeGame
 {
     class Game
     {
-        static readonly int x = 80;
-        static readonly int y = 26;
+        static readonly int _x = 80;
+        static readonly int _y = 26;
 
         static Walls walls;
         static Snake snake;
@@ -17,11 +17,12 @@ namespace SnakeGame
 
         static void Main()
         {
-            Console.SetWindowSize(x + 1, y + 1);
-            Console.SetBufferSize(x + 1, y + 1);
+            Console.SetWindowSize(_x + 1, _y + 1);
+            Console.SetBufferSize(_x + 1, _y + 1);
             Console.CursorVisible = false;
 
-            walls = new Walls(x, y, '#');
+            walls = Walls
+                { x = _x, y = _y, ch = '#' };
             snake = new Snake(x / 2, y / 2, 3);
 
             food_factory = new FoodFactory(x, y, '@');
@@ -281,9 +282,16 @@ namespace SnakeGame
         {
             for (int i = snake.Count - 2; i > 0; i--)
             {
-                if (snake[i] == p)
+                try
                 {
-                    return true;
+                    if (snake[i] == p)
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
                 }
             }
             return false;
@@ -305,11 +313,11 @@ namespace SnakeGame
 
         Random random = new Random();
 
-        public FoodFactory()
+        public FoodFactory()//: this.x, this.y(0), this.ch('\0')
         {
-            this.x = 0;
-            this.y = 0;
-            this.ch = '\0';
+            x = 0;
+            y = 0;
+            ch = '\0';
         }
 
         public FoodFactory(int x, int y, char ch)
